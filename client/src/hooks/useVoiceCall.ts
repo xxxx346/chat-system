@@ -117,6 +117,8 @@ export function useVoiceCall() {
     // Register the endCall function so VoiceCall UI can trigger cleanup
     useCallStore.getState().setCleanupFn(endCall)
 
+    const pendingOfferRef = { current: null as any }
+
     const onOffer = async (data: any) => {
       if (!data.fromUserId || !data.offer || makingOfferRef.current) return
       if (pcRef.current) {
@@ -124,24 +126,41 @@ export function useVoiceCall() {
         return
       }
 
-      const store = useCallStore.getState()
-      store.setRinging(data.fromUserId, data.fromUsername, data.fromAvatar)
+      // Store the offer data for later acceptance/rejection
+      pendingOfferRef.current = {
+        fromUserId: data.fromUserId,
+        fromUsername: data.fromUsername,
+        fromAvatar: data.fromAvatar || '',
+        offer: data.offer,
+      }
+
+      // Just show ringing — do NOT auto-answer
+      useCallStore.getState().setRinging(data.fromUserId, data.fromUsername, data.fromAvatar)
+
+      // Register the accept handler
+      useCallStore.getState().setAnswerCall(() => handleAcceptCall)
+    }
+
+    const handleAcceptCall = async () => {
+      const pending = pendingOfferRef.current
+      if (!pending) return
+      pendingOfferRef.current = null
 
       try {
-        const pc = await createPC(data.fromUserId)
-        await pc.setRemoteDescription(new RTCSessionDescription(data.offer))
+        const pc = await createPC(pending.fromUserId)
+        await pc.setRemoteDescription(new RTCSessionDescription(pending.offer))
         flushCandidates()
         const answer = await pc.createAnswer()
         await pc.setLocalDescription(answer)
         socketService.sendVoiceAnswer({
-          targetUserId: data.fromUserId,
+          targetUserId: pending.fromUserId,
           answer: pc.localDescription?.toJSON(),
         })
-        store.setConnected()
+        useCallStore.getState().setConnected()
       } catch (err) {
-        console.error('Failed to handle offer:', err)
-        useCallStore.getState().setIdle()
+        console.error('Failed to accept call:', err)
         cleanup()
+        useCallStore.getState().setIdle()
       }
     }
 
@@ -166,6 +185,7 @@ export function useVoiceCall() {
     }
 
     const onEnd = () => {
+      pendingOfferRef.current = null
       cleanup()
       useCallStore.getState().setIdle()
     }

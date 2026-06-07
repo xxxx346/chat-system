@@ -79,6 +79,19 @@ export default function VoiceCall() {
                 onClick={handleEndCall}
                 style={{ width: 56, height: 56 }}
               />
+              {status === 'ringing' && (
+                <Button
+                  type="primary"
+                  size="large"
+                  shape="circle"
+                  icon={<PhoneOutlined />}
+                  onClick={() => {
+                    const state = useCallStore.getState()
+                    if (state.answerCall) state.answerCall()
+                  }}
+                  style={{ width: 56, height: 56, background: '#52c41a', borderColor: '#52c41a' }}
+                />
+              )}
             </Space>
           </div>
         </Modal>
