@@ -1,0 +1,1 @@
+{"version":3,"file":"voiceController.d.ts","sourceRoot":"","sources":["../../src/controllers/voiceController.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAA;AAIlC,OAAO,EAAE,WAAW,EAAE,MAAM,oBAAoB,CAAA;AAUhD,wBAAsB,WAAW,CAAC,GAAG,EAAE,WAAW,EAAE,GAAG,EAAE,QAAQ,+CAiChE;AAED,wBAAsB,QAAQ,CAAC,GAAG,EAAE,WAAW,EAAE,GAAG,EAAE,QAAQ,2DAc7D"}

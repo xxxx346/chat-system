@@ -1,0 +1,21 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_1 = require("../middleware/auth");
+const friendController_1 = require("../controllers/friendController");
+const router = (0, express_1.Router)();
+router.use(auth_1.authMiddleware);
+router.get('/', friendController_1.getFriends);
+router.get('/search', friendController_1.searchUsers);
+router.post('/requests', friendController_1.sendFriendRequest);
+router.get('/requests', friendController_1.getFriendRequests);
+router.put('/requests/:id', friendController_1.handleFriendRequest);
+router.post('/requests/:id/resend', friendController_1.resendFriendRequest);
+router.put('/:id/move', friendController_1.moveFriendToGroup);
+router.delete('/:id', friendController_1.deleteFriend);
+router.get('/groups', friendController_1.getGroups);
+router.post('/groups', friendController_1.createGroup);
+router.put('/groups/:id', friendController_1.renameGroup);
+router.delete('/groups/:id', friendController_1.deleteGroup);
+exports.default = router;
+//# sourceMappingURL=friend.js.map

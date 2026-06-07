@@ -1,0 +1,1 @@
+{"version":3,"file":"MessageStatus.d.ts","sourceRoot":"","sources":["../../src/models/MessageStatus.ts"],"names":[],"mappings":"AAEA,qBACa,aAAa;IAExB,EAAE,EAAE,MAAM,CAAA;IAGV,UAAU,EAAE,MAAM,CAAA;IAGlB,OAAO,EAAE,MAAM,CAAA;IAGf,MAAM,EAAE,MAAM,GAAG,WAAW,GAAG,MAAM,CAAA;IAGrC,OAAO,EAAE,IAAI,CAAA;IAGb,UAAU,EAAE,IAAI,CAAA;CACjB"}

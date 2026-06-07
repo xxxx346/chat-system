@@ -1,0 +1,1 @@
+{"version":3,"file":"FriendRequest.d.ts","sourceRoot":"","sources":["../../src/models/FriendRequest.ts"],"names":[],"mappings":"AAEA,qBACa,aAAa;IAExB,EAAE,EAAE,MAAM,CAAA;IAGV,SAAS,EAAE,MAAM,CAAA;IAGjB,WAAW,EAAE,MAAM,CAAA;IAGnB,MAAM,EAAE,SAAS,GAAG,UAAU,GAAG,UAAU,CAAA;IAG3C,OAAO,EAAE,MAAM,CAAA;IAGf,UAAU,EAAE,IAAI,CAAA;IAGhB,UAAU,EAAE,IAAI,CAAA;CACjB"}
