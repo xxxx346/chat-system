@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { DataSource } from 'typeorm'
 import dotenv from 'dotenv'
 import { User } from '../models/User'
@@ -11,27 +12,15 @@ import { MessageStatus } from '../models/MessageStatus'
 
 dotenv.config()
 
-const entities = [
-  User,
-  FriendGroup,
-  Friend,
-  FriendRequest,
-  Conversation,
-  ConversationMember,
-  Message,
-  MessageStatus,
-]
-
 let dbConfig: any
 
-// Support DATABASE_URL (Railway / cloud) or individual env vars (local)
 if (process.env.DATABASE_URL) {
   dbConfig = {
     type: 'mysql',
     url: process.env.DATABASE_URL,
     synchronize: true,
     logging: false,
-    entities,
+    entities: [User, FriendGroup, Friend, FriendRequest, Conversation, ConversationMember, Message, MessageStatus],
   }
 } else {
   dbConfig = {
@@ -43,7 +32,7 @@ if (process.env.DATABASE_URL) {
     database: process.env.DB_DATABASE || 'chat_system',
     synchronize: true,
     logging: false,
-    entities,
+    entities: [User, FriendGroup, Friend, FriendRequest, Conversation, ConversationMember, Message, MessageStatus],
   }
 }
 
