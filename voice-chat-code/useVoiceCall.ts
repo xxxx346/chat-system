@@ -114,9 +114,6 @@ export function useVoiceCall() {
   useEffect(() => {
     if (!user) return
 
-    // Register the endCall function so VoiceCall UI can trigger cleanup
-    useCallStore.getState().setCleanupFn(endCall)
-
     const onOffer = async (data: any) => {
       if (!data.fromUserId || !data.offer || makingOfferRef.current) return
       if (pcRef.current) {
@@ -180,7 +177,6 @@ export function useVoiceCall() {
       socketService.offVoiceAnswer(onAnswer)
       socketService.offVoiceIceCandidate(onIce)
       socketService.offVoiceEnd(onEnd)
-      useCallStore.getState().setCleanupFn(null)
       cleanup()
     }
   }, [user, createPC, flushCandidates, cleanup])

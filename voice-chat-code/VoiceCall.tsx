@@ -17,20 +17,10 @@ export default function VoiceCall() {
   const callTimer = useCallStore((s) => s.callTimer)
   const toggleMute = useCallStore((s) => s.toggleMute)
   const toggleSpeaker = useCallStore((s) => s.toggleSpeaker)
+  const setIdle = useCallStore((s) => s.setIdle)
   const tick = useCallStore((s) => s.tick)
 
   const timerRef = useRef<ReturnType<typeof setInterval>>()
-
-  const handleEndCall = () => {
-    const state = useCallStore.getState()
-    // Run cleanup first (stops tracks, closes PC, notifies peer)
-    if (state.cleanupFn) {
-      state.cleanupFn()
-    } else {
-      // Fallback: just reset state
-      state.setIdle()
-    }
-  }
 
   const formatTime = (s: number) => {
     const m = Math.floor(s / 60)
@@ -76,7 +66,7 @@ export default function VoiceCall() {
                 size="large"
                 shape="circle"
                 icon={<CloseOutlined />}
-                onClick={handleEndCall}
+                onClick={() => setIdle()}
                 style={{ width: 56, height: 56 }}
               />
             </Space>
@@ -114,7 +104,7 @@ export default function VoiceCall() {
             <Button
               danger size="large" shape="circle"
               icon={<PauseCircleOutlined />}
-              onClick={handleEndCall}
+              onClick={() => setIdle()}
               style={{ width: 72, height: 72, background: '#ff4d4f', border: 'none' }}
             />
             <Button
