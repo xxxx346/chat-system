@@ -16,17 +16,24 @@ const ConversationMember_1 = require("../models/ConversationMember");
 const Message_1 = require("../models/Message");
 const MessageStatus_1 = require("../models/MessageStatus");
 dotenv_1.default.config();
+// Railway MySQL plugin provides MYSQL_URL (not DATABASE_URL)
+const databaseUrl = process.env.DATABASE_URL || process.env.MYSQL_URL;
+const entities = [
+    User_1.User, FriendGroup_1.FriendGroup, Friend_1.Friend, FriendRequest_1.FriendRequest,
+    Conversation_1.Conversation, ConversationMember_1.ConversationMember, Message_1.Message, MessageStatus_1.MessageStatus,
+];
 let dbConfig;
-if (process.env.DATABASE_URL) {
+if (databaseUrl) {
     dbConfig = {
         type: 'mysql',
-        url: process.env.DATABASE_URL,
+        url: databaseUrl,
         synchronize: true,
         logging: false,
-        entities: [User_1.User, FriendGroup_1.FriendGroup, Friend_1.Friend, FriendRequest_1.FriendRequest, Conversation_1.Conversation, ConversationMember_1.ConversationMember, Message_1.Message, MessageStatus_1.MessageStatus],
+        entities,
     };
 }
 else {
+    // Fallback: individual env vars (local dev)
     dbConfig = {
         type: 'mysql',
         host: process.env.DB_HOST || 'localhost',
@@ -36,8 +43,9 @@ else {
         database: process.env.DB_DATABASE || 'chat_system',
         synchronize: true,
         logging: false,
-        entities: [User_1.User, FriendGroup_1.FriendGroup, Friend_1.Friend, FriendRequest_1.FriendRequest, Conversation_1.Conversation, ConversationMember_1.ConversationMember, Message_1.Message, MessageStatus_1.MessageStatus],
+        entities,
     };
 }
+console.log('Database config:', databaseUrl ? 'using DATABASE_URL' : `using ${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`);
 exports.AppDataSource = new typeorm_1.DataSource(dbConfig);
 //# sourceMappingURL=database.js.map

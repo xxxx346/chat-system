@@ -12,17 +12,26 @@ import { MessageStatus } from '../models/MessageStatus'
 
 dotenv.config()
 
+// Railway MySQL plugin provides MYSQL_URL (not DATABASE_URL)
+const databaseUrl = process.env.DATABASE_URL || process.env.MYSQL_URL
+
+const entities = [
+  User, FriendGroup, Friend, FriendRequest,
+  Conversation, ConversationMember, Message, MessageStatus,
+]
+
 let dbConfig: any
 
-if (process.env.DATABASE_URL) {
+if (databaseUrl) {
   dbConfig = {
     type: 'mysql',
-    url: process.env.DATABASE_URL,
+    url: databaseUrl,
     synchronize: true,
     logging: false,
-    entities: [User, FriendGroup, Friend, FriendRequest, Conversation, ConversationMember, Message, MessageStatus],
+    entities,
   }
 } else {
+  // Fallback: individual env vars (local dev)
   dbConfig = {
     type: 'mysql',
     host: process.env.DB_HOST || 'localhost',
@@ -32,8 +41,10 @@ if (process.env.DATABASE_URL) {
     database: process.env.DB_DATABASE || 'chat_system',
     synchronize: true,
     logging: false,
-    entities: [User, FriendGroup, Friend, FriendRequest, Conversation, ConversationMember, Message, MessageStatus],
+    entities,
   }
 }
+
+console.log('Database config:', databaseUrl ? 'using DATABASE_URL' : `using ${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`)
 
 export const AppDataSource = new DataSource(dbConfig)
