@@ -1,7 +1,26 @@
 import { DataSource } from 'typeorm'
 import dotenv from 'dotenv'
+import { User } from '../models/User'
+import { FriendGroup } from '../models/FriendGroup'
+import { Friend } from '../models/Friend'
+import { FriendRequest } from '../models/FriendRequest'
+import { Conversation } from '../models/Conversation'
+import { ConversationMember } from '../models/ConversationMember'
+import { Message } from '../models/Message'
+import { MessageStatus } from '../models/MessageStatus'
 
 dotenv.config()
+
+const entities = [
+  User,
+  FriendGroup,
+  Friend,
+  FriendRequest,
+  Conversation,
+  ConversationMember,
+  Message,
+  MessageStatus,
+]
 
 let dbConfig: any
 
@@ -12,7 +31,7 @@ if (process.env.DATABASE_URL) {
     url: process.env.DATABASE_URL,
     synchronize: true,
     logging: false,
-    entities: [__dirname + '/../models/*.{ts,js}'],
+    entities,
   }
 } else {
   dbConfig = {
@@ -24,7 +43,7 @@ if (process.env.DATABASE_URL) {
     database: process.env.DB_DATABASE || 'chat_system',
     synchronize: true,
     logging: false,
-    entities: [__dirname + '/../models/*.{ts,js}'],
+    entities,
   }
 }
 
