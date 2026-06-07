@@ -24,6 +24,13 @@ app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: true }))
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
 
+// In production, serve the built frontend
+const clientDist = path.join(__dirname, '../../client/dist')
+if (fs.existsSync(clientDist)) {
+  console.log('Serving frontend from:', clientDist)
+  app.use(express.static(clientDist))
+}
+
 const server = http.createServer(app)
 const io = new SocketIOServer(server, {
   cors: { origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE'] },
@@ -45,6 +52,13 @@ app.use('/api/files', fileRoutes)
 app.get('/api/health', (_, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
+
+// Serve index.html for all other routes (SPA fallback)
+if (fs.existsSync(clientDist)) {
+  app.get('*', (_, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'))
+  })
+}
 
 // Socket setup
 setupSocket(io)

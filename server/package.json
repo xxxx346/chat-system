@@ -1,11 +1,10 @@
 {
-  "name": "chat-server",
+  "name": "chat-system",
   "version": "1.0.0",
-  "description": "Online chat system backend",
+  "description": "Online chat system",
   "scripts": {
-    "dev": "ts-node-dev --respawn src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "build": "tsc"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
