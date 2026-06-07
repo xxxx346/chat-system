@@ -5,6 +5,7 @@ import {
   AudioMutedOutlined, PauseCircleOutlined,
 } from '@ant-design/icons'
 import { useCallStore } from '../../store/callStore'
+import { acceptIncomingCall, hangUpCall } from '../../hooks/useVoiceCall'
 
 const { Text, Title } = Typography
 
@@ -21,15 +22,10 @@ export default function VoiceCall() {
 
   const timerRef = useRef<ReturnType<typeof setInterval>>()
 
-  const handleEndCall = () => {
-    const state = useCallStore.getState()
-    // Run cleanup first (stops tracks, closes PC, notifies peer)
-    if (state.cleanupFn) {
-      state.cleanupFn()
-    } else {
-      // Fallback: just reset state
-      state.setIdle()
-    }
+  // Cancel outgoing call (caller-side)
+  const cancelCall = () => {
+    // Just reset state - no peer connection to clean up yet
+    hangUpCall()
   }
 
   const formatTime = (s: number) => {
@@ -76,7 +72,7 @@ export default function VoiceCall() {
                 size="large"
                 shape="circle"
                 icon={<CloseOutlined />}
-                onClick={handleEndCall}
+                onClick={cancelCall}
                 style={{ width: 56, height: 56 }}
               />
               {status === 'ringing' && (
@@ -85,10 +81,7 @@ export default function VoiceCall() {
                   size="large"
                   shape="circle"
                   icon={<PhoneOutlined />}
-                  onClick={() => {
-                    const state = useCallStore.getState()
-                    if (state.answerCall) state.answerCall()
-                  }}
+                  onClick={acceptIncomingCall}
                   style={{ width: 56, height: 56, background: '#52c41a', borderColor: '#52c41a' }}
                 />
               )}
@@ -127,7 +120,7 @@ export default function VoiceCall() {
             <Button
               danger size="large" shape="circle"
               icon={<PauseCircleOutlined />}
-              onClick={handleEndCall}
+              onClick={hangUpCall}
               style={{ width: 72, height: 72, background: '#ff4d4f', border: 'none' }}
             />
             <Button
